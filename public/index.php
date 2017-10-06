@@ -35,7 +35,26 @@ $app->get('/getlocation/{place}', function (Request $request, Response $response
 
     $location = $Geocoder->geocode();
 
-    return $response->withJson($location,200);
+    // get complete location in array
+/*    echo "<pre>";
+    echo print_r($location);die();*/
+
+
+    // presize location
+    echo $location['results'][0]['formatted_address']."<br>";
+    // get latitute and longitude
+    echo "Latitude : ".$location['results'][0]['geometry']['location']['lat']."<br>";
+    echo "Longitude : ".$location['results'][0]['geometry']['location']['lng']."<br>";
+
+
+    // get address component
+/*    echo "<pre>";
+    for ($i = 0 ; $i<count($location['results'][0]['address_components']) ; $i++){
+        echo print_r($location['results'][0]['address_components'][$i])."<br><br>";
+    }*/
+
+    // for get complete information in json array
+/*    return $response->withJson($location,200);*/
 
 });
 
@@ -65,11 +84,11 @@ $app->get('/getlocation/{source}/{destination}', function (Request $request, Res
 
     $array = json_decode($directions,true);
     for ($i = 0 ; $i<count($array['routes'][0]['legs']) ; $i++){
-        echo " Direction no.".($i+1)."<br><br><br>";
+        echo "<h1>Direction no.".($i+1)."</h1><br>&nbsp;&nbsp;&nbsp;<code>Steps</code><br><ol>";
         for ($j = 0 ; $j<count($array['routes'][0]['legs'][$i]['steps']) ; $j++){
-            echo $array['routes'][0]['legs'][0]['steps'][$j]['html_instructions']."<br><br>";
+            echo "<li>".$array['routes'][0]['legs'][0]['steps'][$j]['html_instructions']."</li><br><br>";
         }
-        echo "<br><br>";
+        echo "</ol><br><br>";
     }
 });
 
