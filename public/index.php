@@ -24,6 +24,27 @@ $container['logger'] = function($c) {
 
 /*$app->add( new authmiddleware());*/
 
+$app->get('/search/{place}', function (Request $request, Response $response) {
+
+    $address = $request->getAttribute('place');
+    $address = str_replace(' ','+',$address);
+
+    $url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=".$address."&key=AIzaSyAv-ZCgoqfzYX1ziVwVu8sEHrCikTfx2Ls";
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL,"$url");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $directions = curl_exec ($ch);
+    $array = json_decode($directions,true);
+
+    echo "<pre>";
+    echo print_r($array);
+
+
+});
+
+
+
+
 $app->get('/getlocation/{place}', function (Request $request, Response $response) {
 
     $address = $request->getAttribute('place');
@@ -83,10 +104,10 @@ $app->get('/getlocation/{source}/{destination}', function (Request $request, Res
     $url='http://maps.googleapis.com/maps/api/directions/json?';
     $url .= 'origin='.urlencode($formattedAddrFrom); //origin from form
     $url .= '&destination='.urlencode($formattedAddrTo).'&waypoints='; //destination from form
-    $url.=urlencode('tariq road').','.urlencode('karachi').','.urlencode('pakistan');
-    $url.='|';
-    $url=substr($url, 0, -1); 
-    $url .='&sensor=false';
+    $url .= urlencode('tariq road').','.urlencode('karachi').','.urlencode('pakistan');
+    $url .= '|';
+    $url = substr($url, 0, -1);
+    $url .= '&sensor=false';
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL,"$url");
