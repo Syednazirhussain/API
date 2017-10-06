@@ -24,7 +24,7 @@ $container['logger'] = function($c) {
 
 /*$app->add( new authmiddleware());*/
 
-$app->get('/search/{place}', function (Request $request, Response $response) {
+$app->get('/search/place/{place}', function (Request $request, Response $response) {
 
     $address = $request->getAttribute('place');
     $address = str_replace(' ','+',$address);
@@ -36,8 +36,63 @@ $app->get('/search/{place}', function (Request $request, Response $response) {
     $directions = curl_exec ($ch);
     $array = json_decode($directions,true);
 
-    echo "<pre>";
-    echo print_r($array);
+//    get complete information of location
+/*    echo "<pre>";
+    echo print_r($array);*/
+
+    // get location near places
+    $html = "<table border=\"1\">";
+    $html .= "<tr>";
+    $html .= "<td>Check on google map</td>";
+    $html .= "<td>Place img</td>";
+    $html .= "</tr>";
+    for ($i =0 ; $i<count($array['results']) ; $i++){
+        $html .= "<tr>";
+        if (isset($array['results'][$i]['photos'])){
+            $html .= "<td>".$array['results'][$i]['photos'][0]['html_attributions'][0]."</td>";
+            $url = '';
+            $url .= "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=".$array['results'][$i]['photos'][0]['photo_reference']."&key=AIzaSyAv-ZCgoqfzYX1ziVwVu8sEHrCikTfx2Ls";
+            $html .= "<td><img src='{$url}'></td>";
+        }else{
+            continue;
+        }
+        $html .= "</tr>";
+    }
+    $html .= "</<table>";
+    echo $html;
+
+});
+
+
+$app->get('/search/directions/{source}/{destination}', function (Request $request, Response $response) {
+
+
+
+    $source = $request->getAttribute('source');
+    $destination = $request->getAttribute('destination');
+
+    $formattedAddrFrom = str_replace(' ','+',$source);
+    $formattedAddrTo = str_replace(' ','+',$destination);
+
+    $url = "https://maps.googleapis.com/maps/api/directions/json?origin=".$formattedAddrFrom."&destination=".$formattedAddrTo."&mode=driving&key=AIzaSyAv-ZCgoqfzYX1ziVwVu8sEHrCikTfx2Ls";
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL,"$url");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $directions = curl_exec ($ch);
+    $array = json_decode($directions,true);
+
+//    get complete information of location
+/*        echo "<pre>";
+        echo print_r($array);*/
+
+    for ($i = 0 ; $i<count($array['routes'][0]['legs']) ; $i++){
+        echo "<h1>Direction no.".($i+1)."</h1><br>&nbsp;&nbsp;&nbsp;<code>Steps</code><br><ol>";
+        for ($j = 0 ; $j<count($array['routes'][0]['legs'][$i]['steps']) ; $j++){
+            echo "<li>".$array['routes'][0]['legs'][0]['steps'][$j]['html_instructions']."</li><br><br>";
+        }
+        echo "</ol><br><br>";
+    }
+
 
 
 });
@@ -89,8 +144,15 @@ $app->get('/getlocation/{place}', function (Request $request, Response $response
 
 });
 
+// source to get google map api
+
 // https://developers.google.com/maps/
 
+// search by place
+// https://developers.google.com/places/web-service/search
+
+// direction and distance matrix search
+// https://developers.google.com/maps/web-services/
 
 $app->get('/getlocation/{source}/{destination}', function (Request $request, Response $response) {
     /* return $response->getBody()->write($request->getAttribute('place'));*/
