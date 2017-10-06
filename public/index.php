@@ -40,18 +40,34 @@ $app->get('/getlocation/{place}', function (Request $request, Response $response
     echo print_r($location);die();*/
 
 
-    // presize location
-    echo $location['results'][0]['formatted_address']."<br>";
+    // precise location
+    echo "Precise Location :  <b>".$location['results'][0]['formatted_address']."</b><br>";
     // get latitute and longitude
-    echo "Latitude : ".$location['results'][0]['geometry']['location']['lat']."<br>";
-    echo "Longitude : ".$location['results'][0]['geometry']['location']['lng']."<br>";
+    echo "Latitude : <b>".$location['results'][0]['geometry']['location']['lat']."</b><br>";
+    echo "Longitude : <b>".$location['results'][0]['geometry']['location']['lng']."</b><br><br><br>";
 
 
     // get address component
-/*    echo "<pre>";
+
+    $html = "<table border=\"1\">";
+    $html .= "<thead>";
+    $html .= "<td>LONG NAME</td>";
+    $html .= "<td>SHORT NAME</td>";
+    $html .= "<td>TYPE</td>";
+    $html .= "</thead>";
     for ($i = 0 ; $i<count($location['results'][0]['address_components']) ; $i++){
-        echo print_r($location['results'][0]['address_components'][$i])."<br><br>";
-    }*/
+        $html .= "<tr>";
+        $html .= "<td>".$location['results'][0]['address_components'][$i]['long_name']."</td>>";
+        $html .= "<td>".$location['results'][0]['address_components'][$i]['short_name']."</td>>";
+        $html .= "<td>";
+        for ($j = 0 ; $j<count($location['results'][0]['address_components'][$i]['types']) ; $j++){
+            ($j < count($location['results'][0]['address_components'][$i]['types'])-1 )? $html .= $location['results'][0]['address_components'][$i]['types'][$j]."<b>&nbsp;/&nbsp;</b>" : $html .= $location['results'][0]['address_components'][$i]['types'][$j];
+        }
+        $html .= "</td>";
+        $html .= "</tr>";
+    }
+
+    echo $html;
 
     // for get complete information in json array
 /*    return $response->withJson($location,200);*/
