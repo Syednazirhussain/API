@@ -25,14 +25,10 @@ $container['logger'] = function($c) {
 /*$app->add( new authmiddleware());*/
 
 $app->get('/getlocation/{place}', function (Request $request, Response $response) {
-   /* return $response->getBody()->write($request->getAttribute('place'));*/
 
     $address = $request->getAttribute('place');
-
+    $address = str_replace(' ','+',$address);
     $Geocoder = new GoogleMapsGeocoder($address);
-
-
-
     $location = $Geocoder->geocode();
 
     // get complete location in array
@@ -48,7 +44,6 @@ $app->get('/getlocation/{place}', function (Request $request, Response $response
 
 
     // get address component
-
     $html = "<table border=\"1\">";
     $html .= "<thead>";
     $html .= "<td>LONG NAME</td>";
@@ -66,13 +61,15 @@ $app->get('/getlocation/{place}', function (Request $request, Response $response
         $html .= "</td>";
         $html .= "</tr>";
     }
-
     echo $html;
 
     // for get complete information in json array
 /*    return $response->withJson($location,200);*/
 
 });
+
+// https://developers.google.com/maps/
+
 
 $app->get('/getlocation/{source}/{destination}', function (Request $request, Response $response) {
     /* return $response->getBody()->write($request->getAttribute('place'));*/
