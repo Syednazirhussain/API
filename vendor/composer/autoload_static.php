@@ -119,6 +119,13 @@ class ComposerStaticInitb3fb120a487e30dd5d944365202da8ff
                 0 => __DIR__ . '/..' . '/pimple/pimple/src',
             ),
         ),
+        'G' => 
+        array (
+            'GoogleMapsGeocoder' => 
+            array (
+                0 => __DIR__ . '/..' . '/jstayton/google-maps-geocoder/src',
+            ),
+        ),
     );
 
     public static function getInitializer(ClassLoader $loader)

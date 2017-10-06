@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Pimple' => array($vendorDir . '/pimple/pimple/src'),
+    'GoogleMapsGeocoder' => array($vendorDir . '/jstayton/google-maps-geocoder/src'),
 );

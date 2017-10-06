@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "4244cd9b3b352dd29d0504282b7b0418",
+    "content-hash": "fb65dbc949febf68a1acdb738845cd95",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -36,6 +36,57 @@
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
             "homepage": "https://github.com/container-interop/container-interop",
             "time": "2017-02-14T19:40:03+00:00"
+        },
+        {
+            "name": "jstayton/google-maps-geocoder",
+            "version": "v2.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jstayton/GoogleMapsGeocoder.git",
+                "reference": "9da0b1363e0dc2908750e60af23f2d32b0afe855"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jstayton/GoogleMapsGeocoder/zipball/9da0b1363e0dc2908750e60af23f2d32b0afe855",
+                "reference": "9da0b1363e0dc2908750e60af23f2d32b0afe855",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.0"
+            },
+            "require-dev": {
+                "phpdocumentor/phpdocumentor": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "GoogleMapsGeocoder": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Justin Stayton",
+                    "homepage": "http://justinstayton.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A PHP wrapper for the Google Maps Geocoding API v3.",
+            "homepage": "https://github.com/jstayton/GoogleMapsGeocoder",
+            "keywords": [
+                "geocode",
+                "geocoder",
+                "geocoding",
+                "gmap",
+                "gmaps",
+                "google",
+                "map",
+                "maps"
+            ],
+            "time": "2015-11-10T19:17:52+00:00"
         },
         {
             "name": "monolog/monolog",

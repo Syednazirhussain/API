@@ -24,6 +24,57 @@ $container['logger'] = function($c) {
 
 /*$app->add( new authmiddleware());*/
 
+$app->get('/getlocation/{place}', function (Request $request, Response $response) {
+   /* return $response->getBody()->write($request->getAttribute('place'));*/
+
+    $address = $request->getAttribute('place');
+
+    $Geocoder = new GoogleMapsGeocoder($address);
+
+
+
+    $location = $Geocoder->geocode();
+
+    return $response->withJson($location,200);
+
+});
+
+$app->get('/getlocation/{source}/{destination}', function (Request $request, Response $response) {
+    /* return $response->getBody()->write($request->getAttribute('place'));*/
+
+    $source = $request->getAttribute('source');
+    $destination = $request->getAttribute('destination');
+
+    $formattedAddrFrom = str_replace(' ','+',$source);
+    $formattedAddrTo = str_replace(' ','+',$destination);
+
+    $url='http://maps.googleapis.com/maps/api/directions/json?';
+    $url .= 'origin='.urlencode($formattedAddrFrom); //origin from form
+    $url .= '&destination='.urlencode($formattedAddrTo).'&waypoints='; //destination from form
+    $url.=urlencode('tariq road').','.urlencode('karachi').','.urlencode('pakistan');
+    $url.='|';
+    $url=substr($url, 0, -1); 
+    $url .='&sensor=false';
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL,"$url");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $directions = curl_exec ($ch);
+
+/*    return $response->getBody()->write($directions);*/
+
+    $array = json_decode($directions,true);
+    for ($i = 0 ; $i<count($array['routes'][0]['legs']) ; $i++){
+        echo " Direction no.".($i+1)."<br><br><br>";
+        for ($j = 0 ; $j<count($array['routes'][0]['legs'][$i]['steps']) ; $j++){
+            echo $array['routes'][0]['legs'][0]['steps'][$j]['html_instructions']."<br><br>";
+        }
+        echo "<br><br>";
+    }
+});
+
+
+
 $app->get('/courses', function (Request $request, Response $response) {
     $customer = new customer();
     $data = $customer->getAllSubject();
