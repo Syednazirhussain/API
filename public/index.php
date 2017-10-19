@@ -27,7 +27,9 @@ $container['logger'] = function($c) {
 $app->get('/search/place/{place}', function (Request $request, Response $response) {
 
     $address = $request->getAttribute('place');
-    $address = str_replace(' ','+',$address);
+    /*$address = str_replace(' ','+',$address);*/
+
+    $address = urlencode($address);
 
     $url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=".$address."&key=AIzaSyAv-ZCgoqfzYX1ziVwVu8sEHrCikTfx2Ls";
     $ch = curl_init();
@@ -63,6 +65,51 @@ $app->get('/search/place/{place}', function (Request $request, Response $respons
 
 });
 
+$app->get('/search/directions', function (Request $request, Response $response,$arg) {
+    // to check all querey params
+     //var_dump($request->getQueryParams());
+
+
+    // to get individual querey string params
+    //var_dump($request->getParam('name'));
+
+
+    // to check individual params length
+/*     $name = $request->getParam('name');
+    var_dump(strlen($name));*/
+
+    $source = $request->getParam('source');
+    $destination = $request->getParam('destination');
+
+/*    $formattedAddrFrom = str_replace(' ','+',$source);
+    $formattedAddrTo = str_replace(' ','+',$destination);*/
+
+    $formattedAddrFrom = urlencode($source);
+    $formattedAddrTo = urlencode($destination);
+
+    $url = "https://maps.googleapis.com/maps/api/directions/json?origin=".$formattedAddrFrom."&destination=".$formattedAddrTo."&mode=driving&key=AIzaSyAv-ZCgoqfzYX1ziVwVu8sEHrCikTfx2Ls";
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL,"$url");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $directions = curl_exec ($ch);
+    $array = json_decode($directions,true);
+
+//    get complete information of location
+    /*        echo "<pre>";
+            echo print_r($array);*/
+
+    for ($i = 0 ; $i<count($array['routes'][0]['legs']) ; $i++){
+        echo "<h1>Direction no.".($i+1)."</h1><br>&nbsp;&nbsp;&nbsp;<code>Steps</code><br><ol>";
+        for ($j = 0 ; $j<count($array['routes'][0]['legs'][$i]['steps']) ; $j++){
+            echo "<li>".$array['routes'][0]['legs'][0]['steps'][$j]['html_instructions']."</li><br><br>";
+        }
+        echo "</ol><br><br>";
+    }
+
+
+
+});
+
 
 $app->get('/search/directions/{source}/{destination}', function (Request $request, Response $response) {
 
@@ -83,7 +130,7 @@ $app->get('/search/directions/{source}/{destination}', function (Request $reques
 
 //    get complete information of location
 /*        echo "<pre>";
-        echo print_r($array);*/
+        echo print_r($array);die();*/
 
     for ($i = 0 ; $i<count($array['routes'][0]['legs']) ; $i++){
         echo "<h1>Direction no.".($i+1)."</h1><br>&nbsp;&nbsp;&nbsp;<code>Steps</code><br><ol>";
@@ -92,8 +139,6 @@ $app->get('/search/directions/{source}/{destination}', function (Request $reques
         }
         echo "</ol><br><br>";
     }
-
-
 
 });
 
