@@ -1,7 +1,14 @@
 <?php
 require_once('autoload.php');
+
+
+//echo $_SERVER['REMOTE_ADDR'];die();
+
+
 $user = new user();
+
 $user->checklogin();
+//$user->logout();
 ?>
 <script src="../controller/jquery-2.1.4.min.js"></script>
 <script src="../controller/script.js"></script>
